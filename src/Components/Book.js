@@ -9,12 +9,22 @@ export const Book = props => {
         <li>
             <div className="book">
                 <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.backgroundImage}")` }}></div>
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}></div>
                     <BookSelect />
                 </div>
                 <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.author}</div>
+                <Author authors={book.authors} />
             </div>
         </li>
+    )
+};
+
+const Author = props => {
+    const { authors } = props;
+
+    return(
+        <div className="book-authors">
+            {authors.join(", ")}
+        </div>
     )
 };

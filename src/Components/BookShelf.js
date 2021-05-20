@@ -3,11 +3,11 @@ import { BooksGrid } from './BooksGrid';
 
 export const BookShelf = props => {
     
-    const { books, status } = props;
+    const { books, title } = props;
 
     return(
         <div className="bookshelf">
-            <h2 className="bookshelf-title">{status}</h2>
+            <h2 className="bookshelf-title">{title}</h2>
             <BooksGrid
                 books={books}
             />
