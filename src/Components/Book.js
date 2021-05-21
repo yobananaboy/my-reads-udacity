@@ -1,5 +1,6 @@
 import React from 'react';
 import { BookSelect } from './BookSelect';
+import PropTypes from 'prop-types';
 
 export const Book = props => {
 
@@ -29,4 +30,12 @@ const Author = props => {
             {authors && authors.join(", ")}
         </div>
     )
+};
+
+Book.propTypes = {
+    book: PropTypes.object.isRequired
+};
+
+Author.propTypes = {
+    auhors: PropTypes.object
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Book } from './Book';
+import PropTypes from 'prop-types';
 
 export const BooksGrid = props => {
     const { books} = props;
@@ -15,4 +16,8 @@ export const BooksGrid = props => {
             </ol>
         </div>
     );
+};
+
+BooksGrid.propTypes = {
+    books: PropTypes.array
 };

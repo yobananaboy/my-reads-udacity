@@ -4,7 +4,7 @@ import qs from 'qs';
 import * as BooksAPI from '../BooksAPI';
 import { BooksGrid } from './BooksGrid';
 
-export const Search = props => {
+export const Search = () => {
     // React Router's useHistory hook
     let history = useHistory();
 
