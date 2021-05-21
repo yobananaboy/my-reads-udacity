@@ -1,18 +1,20 @@
 import React from 'react';
 import { BooksGrid } from './BooksGrid';
 import PropTypes from 'prop-types';
+import { Header, Container, Divider } from 'semantic-ui-react';
 
 export const BookShelf = props => {
     
     const { books, title } = props;
 
     return(
-        <div className="bookshelf">
-            <h2 className="bookshelf-title">{title}</h2>
+        <Container className="bookshelf">
+            <Header as="h2" className="bookshelf-title">{title}</Header>
+            <Divider />
             <BooksGrid
                 books={books}
             />
-        </div>
+        </Container>
     );
 };
 

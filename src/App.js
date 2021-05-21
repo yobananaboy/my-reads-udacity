@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Header } from './Components/Header';
+import { PageHeader } from './Components/Header';
 import { BookShelf } from './Components/BookShelf';
 import { OpenSearch } from './Components/OpenSearch';
 import { Search } from './Components/Search';
@@ -33,7 +33,7 @@ function App() {
             path='/'
             render={() => (
               <>
-                <Header />
+                <PageHeader />
                 {Object.keys(bookShelves).map((key) => (
                   <BookShelf
                     key={bookShelves[key]}

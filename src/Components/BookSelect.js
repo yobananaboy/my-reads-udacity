@@ -1,18 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { Select } from 'semantic-ui-react';
+
+const shelfOptions = [
+    {
+      key: 'currentlyReading',
+      text: 'Currently Reading',
+      value: 'currentlyReading',
+    },
+    {
+      key: 'wantToRead',
+      text: 'Want to Read',
+      value: 'wantToRead',
+    },
+    {
+      key: 'read',
+      text: 'Read',
+      value: 'read',
+    },
+    {
+      key: 'none',
+      text: 'None',
+      value: 'none',
+    },
+  ]
 
 export const BookSelect = props => {
     const { book } = props;
+
+    const handleChange = e => {
+        const { value } = e.target;
+        console.log(value);
+    }
+
     return(
-        <div className="book-shelf-changer">
-            <select>
-                <option value="move" disabled>Move to...</option>
-                <option value="currentlyReading">Currently Reading</option>
-                <option value="wantToRead">Want to Read</option>
-                <option value="read">Read</option>
-                <option value="none">None</option>
-            </select>
-        </div>
+        <Select
+            placeholder="Move to..."
+            options={shelfOptions}
+            value={'shelf' in book ? book.shelf : null}
+            onChange={handleChange}
+        />
     )
 }
 

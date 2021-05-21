@@ -13,9 +13,10 @@ body, .app {
 /* main page */
 
 .list-books-title {
-  padding: 10px 0;
-  background: #2e7c31;
+  padding: 2em 0;
+  background: #ffea00;
   text-align: center;
+  margin-bottom: 1em;
 }
 
 .list-books-title h1 {
@@ -189,6 +190,8 @@ button:active {
 .book-cover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   background: #eee;
+  margin: 0 auto 1em auto;
+  display: block;
 }
 
 .book-cover-title {

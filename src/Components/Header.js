@@ -1,7 +1,11 @@
-import React from "react";
+import React from 'react';
+import { Header, Container } from 'semantic-ui-react';
 
-export const Header = () => (
-    <div className="list-books-title">
-        <h1>MyReads</h1>
-    </div>
+export const PageHeader = () => (
+    <Container
+        fluid
+        className="list-books-title"
+    >
+        <Header as="h1">MyReads</Header>
+    </Container>
 )
