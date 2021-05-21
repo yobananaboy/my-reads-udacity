@@ -26,23 +26,28 @@ const shelfOptions = [
   ]
 
 export const BookSelect = props => {
-    const { book } = props;
+    const { book, updateBook, search } = props;
 
-    const handleChange = e => {
-        const { value } = e.target;
-        console.log(value);
-    }
+    const handleChange = (e, data) => {
+        const { value } = data;
+        updateBook({
+            book,
+            shelf: value,
+            search // let handler know we're updating a book we searched for 
+        });
+    };
 
     return(
         <Select
             placeholder="Move to..."
             options={shelfOptions}
-            value={'shelf' in book ? book.shelf : null}
+            value={'shelf' in book && book.shelf !== 'none' ? book.shelf : null}
             onChange={handleChange}
         />
     )
 }
 
 BookSelect.propTypes = {
-    book: PropTypes.object.isRequired
+    book: PropTypes.object.isRequired,
+    search: PropTypes.bool
 };

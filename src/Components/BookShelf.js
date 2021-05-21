@@ -5,7 +5,7 @@ import { Header, Container, Divider } from 'semantic-ui-react';
 
 export const BookShelf = props => {
     
-    const { books, title } = props;
+    const { books, title, updateBook } = props;
 
     return(
         <Container className="bookshelf">
@@ -13,6 +13,7 @@ export const BookShelf = props => {
             <Divider />
             <BooksGrid
                 books={books}
+                updateBook={updateBook}
             />
         </Container>
     );
@@ -20,5 +21,6 @@ export const BookShelf = props => {
 
 BookShelf.propTypes = {
     books: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    updateBook: PropTypes.func.isRequired
 };

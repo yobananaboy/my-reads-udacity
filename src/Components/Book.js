@@ -5,7 +5,7 @@ import { Container, Segment } from 'semantic-ui-react';
 
 export const Book = props => {
 
-    const { book } = props;
+    const { book, updateBook, search } = props;
 
     return(
         <Segment>
@@ -13,7 +13,11 @@ export const Book = props => {
                 <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}></div>
             }
             <Container>
-                <BookSelect book={book} />
+                <BookSelect
+                    book={book}
+                    updateBook={updateBook}
+                    search={search}
+                />
                 <div className="book-title">{book.title}</div>
                 <Author authors={book.authors} />
             </Container>
@@ -32,7 +36,9 @@ const Author = props => {
 };
 
 Book.propTypes = {
-    book: PropTypes.object.isRequired
+    book: PropTypes.object.isRequired,
+    updateBook: PropTypes.func.isRequired,
+    search: PropTypes.bool
 };
 
 Author.propTypes = {

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import qs from 'qs';
-import * as BooksAPI from '../BooksAPI';
 import { BooksGrid } from './BooksGrid';
+import PropTypes from 'prop-types';
 
-export const Search = () => {
+export const Search = props => {
+
+    const { updateBook, books, updateBooks, searchForBooks } = props;
+
     // React Router's useHistory hook
     let history = useHistory();
 
@@ -13,12 +16,7 @@ export const Search = () => {
 
     // if 'query' in query string then set this as the search state, otherwise leave blank
     const [search, setSearch] = useState('query' in parsedSearch ? parsedSearch.query : "");
-    const [searching, setSearching] = useState(false); // this state lets us know to only search when we're not searching
     const [newInput, setNewInput] = useState(true); // this state lets us know when there has been a new input (so we need to search)
-
-    // book search results - this is an empty arr by default
-    const [bookSearchResults, updateBookSearchResults] = useState([]);
-
     /*
         useEffect will search for book on search state change
         so either when user searches for a book using input or 'query' is in url query string
@@ -26,35 +24,19 @@ export const Search = () => {
     useEffect(() => {
         // don't bother making API call if there is no search term in state
         if(!search) {
-            console.log('no search result');
-            updateBookSearchResults([]);
+            if(books.length >= 1) updateBooks([]);
             return;
         };
         // if a new input hasn't been entered or we are already searching don't make API call
-        if(!newInput || searching) return;
-        setSearching(true);
+        if(!newInput) return;
         setNewInput(false);
-        BooksAPI.search(search)
-            .then(result => {
-                console.log('search result', search,result);
-                /*
-                    Check for an error (meaning no books found)
-                    If errored - update book results to empty err
-                    Otherwise update with books received from API
-                */
-                !result || 'error' in result ? updateBookSearchResults([]) : updateBookSearchResults(result);
-                setSearching(false);
-            })
-            .catch(err => {
-                console.log(err);
-                updateBookSearchResults([]); // no results on error searching
-                setSearching(false);
-            });
+        searchForBooks({search});
     }, [
+        books.length,
         search,
-        searching,
         newInput,
-        updateBookSearchResults
+        updateBooks,
+        searchForBooks
     ]);
 
     const handleChange = (e) => {
@@ -95,10 +77,19 @@ export const Search = () => {
             </div>
             </div>
             <div className="search-books-results">
-                {bookSearchResults.length >= 1 && <BooksGrid
-                    books={bookSearchResults}
+                {books.length >= 1 && <BooksGrid
+                    books={books}
+                    updateBook={updateBook}
+                    search={true}
                 />}
             </div>
         </div>
     )
 }
+
+Search.propTypes = {
+    updateBook: PropTypes.func.isRequired,
+    books: PropTypes.array.isRequired,
+    updateBooks: PropTypes.func.isRequired,
+    searchForBooks: PropTypes.func.isRequired
+};
