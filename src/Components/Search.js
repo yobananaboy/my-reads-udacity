@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import qs from 'qs';
 import * as BooksAPI from '../BooksAPI';
@@ -14,7 +14,7 @@ export const Search = () => {
     // if 'query' in query string then set this as the search state, otherwise leave blank
     const [search, setSearch] = useState('query' in parsedSearch ? parsedSearch.query : "");
     const [searching, setSearching] = useState(false); // this state lets us know to only search when we're not searching
-    const searchRef = useRef(search); // use ref to keep track of search value - this is used in useEffect to check if new value entered
+    const [newInput, setNewInput] = useState(true); // this state lets us know when there has been a new input (so we need to search)
 
     // book search results - this is an empty arr by default
     const [bookSearchResults, updateBookSearchResults] = useState([]);
@@ -30,10 +30,10 @@ export const Search = () => {
             updateBookSearchResults([]);
             return;
         };
-        // don't bother making API call if search term hasn't changed or we are already searching
-        if(searchRef.current === search || searching) return;
-        searchRef.current = search; // update ref to current search term
+        // if a new input hasn't been entered or we are already searching don't make API call
+        if(!newInput || searching) return;
         setSearching(true);
+        setNewInput(false);
         BooksAPI.search(search)
             .then(result => {
                 console.log('search result', search,result);
@@ -53,12 +53,14 @@ export const Search = () => {
     }, [
         search,
         searching,
+        newInput,
         updateBookSearchResults
     ]);
 
     const handleChange = (e) => {
         // on search input change get value
         const { value } = e.target;
+        setNewInput(true);
         // update search state
         setSearch(value);
         // add/update 'query' in history
