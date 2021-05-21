@@ -1,4 +1,25 @@
-# Getting Started with Create React App
+# MyReads
+
+## About the app
+
+### Homepage view
+
+The MyReads app displays a selection of books on the homepage (`/`) that the user has assigned to three categories:
+
+- Currently reading
+- Wants to read
+- Read
+
+Each book has controls for a user to change the category each book lives in. This will persist on refresh.
+
+### Search view
+
+Visiting `/search` provides an input for the user to enter a search term. If the term matches genre, author or title then books will be displayed in the results. These can then be assigned a category (`Currently reading` etc). They will then appear in your list on the homepage if assigned a category other than the default 'None'.
+## Installation
+
+To install and start this app you need to run `npm install` and `npm start` to get it started.
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
