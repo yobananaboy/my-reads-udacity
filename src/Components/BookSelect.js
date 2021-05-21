@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'semantic-ui-react';
+import { Form, Select } from 'semantic-ui-react';
 
 const shelfOptions = [
     {
@@ -38,12 +38,15 @@ export const BookSelect = props => {
     };
 
     return(
-        <Select
-            placeholder="Move to..."
-            options={shelfOptions}
-            value={'shelf' in book && book.shelf !== 'none' ? book.shelf : null}
-            onChange={handleChange}
-        />
+        <Form.Field>
+            <label>Current bookshelf:</label>
+            <Select
+                placeholder="Move to..."
+                options={shelfOptions}
+                value={'shelf' in book? book.shelf : 'none'}
+                onChange={handleChange}
+            />
+        </Form.Field>
     )
 }
 
