@@ -15,6 +15,8 @@ Each book has controls for a user to change the category each book lives in. Thi
 ### Search view
 
 Visiting `/search` provides an input for the user to enter a search term. If the term matches genre, author or title then books will be displayed in the results. These can then be assigned a category (`Currently reading` etc). They will then appear in your list on the homepage if assigned a category other than the default 'None'.
+
+The search term entered in the input field will also update `query` in the query string. Users can visit `/search?query=foo` and the app will search for books under `foo`.
 ## Installation
 
 To install and start this app you need to run `npm install` and `npm start` to get it started.
