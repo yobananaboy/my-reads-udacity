@@ -6,12 +6,24 @@ import { PageHeader } from './Components/Header';
 import { BookShelf } from './Components/BookShelf';
 import { OpenSearch } from './Components/OpenSearch';
 import { Search } from './Components/Search';
+import { MetaData } from './Components/MetaData';
 
 const bookShelves = {
   currentlyReading: 'Currently reading',
   wantToRead: 'Wants to read',
   read: 'Read'
 };
+
+const metaData = {
+  homepage: {
+    title: 'MyReads | Home',
+    description: 'MyReads app created for the Udacity React nanodegree'
+  },
+  search: {
+    title: 'MyReads | Search',
+    description: 'Enter a genre, title or author to search for books to add to your library'
+  }
+}
 
 function App() {
 
@@ -97,6 +109,7 @@ function App() {
             path='/'
             render={() => (
               <>
+                <MetaData metaData={metaData.homepage} />
                 <PageHeader />
                 {Object.keys(bookShelves).map((key) => (
                   books && <BookShelf
@@ -113,12 +126,15 @@ function App() {
           <Route
             path='/search'
             render={() => (
-              <Search
-                updateBook={updateBookWithShelf}
-                books={bookSearchResults}
-                updateBooks={updateBookSearchResults}
-                searchForBooks={searchForBooks}
-              />
+              <>
+                <MetaData metaData={metaData.search} />
+                <Search
+                  updateBook={updateBookWithShelf}
+                  books={bookSearchResults}
+                  updateBooks={updateBookSearchResults}
+                  searchForBooks={searchForBooks}
+                />
+              </>
             )}
           />
         </Switch>
