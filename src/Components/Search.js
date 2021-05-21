@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import qs from 'qs';
+import * as BooksAPI from '../BooksAPI';
+import { BooksGrid } from './BooksGrid';
 
 export const Search = props => {
     // React Router's useHistory hook
@@ -11,7 +13,49 @@ export const Search = props => {
 
     // if 'query' in query string then set this as the search state, otherwise leave blank
     const [search, setSearch] = useState('query' in parsedSearch ? parsedSearch.query : "");
-    console.log(history);
+    const [searching, setSearching] = useState(false); // this state lets us know to only search when we're not searching
+    const searchRef = useRef(search); // use ref to keep track of search value - this is used in useEffect to check if new value entered
+
+    // book search results - this is an empty arr by default
+    const [bookSearchResults, updateBookSearchResults] = useState([]);
+
+    /*
+        useEffect will search for book on search state change
+        so either when user searches for a book using input or 'query' is in url query string
+    */
+    useEffect(() => {
+        // don't bother making API call if there is no search term in state
+        if(!search) {
+            console.log('no search result');
+            updateBookSearchResults([]);
+            return;
+        };
+        // don't bother making API call if search term hasn't changed or we are already searching
+        if(searchRef.current === search || searching) return;
+        searchRef.current = search; // update ref to current search term
+        setSearching(true);
+        BooksAPI.search(search)
+            .then(result => {
+                console.log('search result', search,result);
+                /*
+                    Check for an error (meaning no books found)
+                    If errored - update book results to empty err
+                    Otherwise update with books received from API
+                */
+                !result || 'error' in result ? updateBookSearchResults([]) : updateBookSearchResults(result);
+                setSearching(false);
+            })
+            .catch(err => {
+                console.log(err);
+                updateBookSearchResults([]); // no results on error searching
+                setSearching(false);
+            });
+    }, [
+        search,
+        searching,
+        updateBookSearchResults
+    ]);
+
     const handleChange = (e) => {
         // on search input change get value
         const { value } = e.target;
@@ -22,7 +66,6 @@ export const Search = props => {
             pathname: history.location.pathname,
             search: `?query=${value}`
         });
-        // TODO: search for book(s) using BooksAPI
     }
 
     return(
@@ -50,7 +93,9 @@ export const Search = props => {
             </div>
             </div>
             <div className="search-books-results">
-            <ol className="books-grid"></ol>
+                {bookSearchResults.length >= 1 && <BooksGrid
+                    books={bookSearchResults}
+                />}
             </div>
         </div>
     )

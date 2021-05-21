@@ -9,7 +9,9 @@ export const Book = props => {
         <li>
             <div className="book">
                 <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}></div>
+                    {'imageLinks' in book &&
+                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}></div>
+                    }
                     <BookSelect />
                 </div>
                 <div className="book-title">{book.title}</div>
@@ -24,7 +26,7 @@ const Author = props => {
 
     return(
         <div className="book-authors">
-            {authors.join(", ")}
+            {authors && authors.join(", ")}
         </div>
     )
 };

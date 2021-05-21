@@ -7,7 +7,11 @@ export const BooksGrid = props => {
     return(
         <div className="bookshelf-books">
             <ol className="books-grid">
-                {books.map(book => <Book key={book.title} book={book} />)}
+                {/*
+                    title-i for key to avoid duplicate key for something like 'robotics'
+                    - becomes 'robotics-1', 'robotics-2' etc.
+                */}
+                {books.map((book, i) => <Book key={`book.title-${i}`} book={book} />)}
             </ol>
         </div>
     );
