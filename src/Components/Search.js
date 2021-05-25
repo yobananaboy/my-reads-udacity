@@ -3,10 +3,12 @@ import { useHistory, Link } from 'react-router-dom';
 import qs from 'qs';
 import { BooksGrid } from './BooksGrid';
 import PropTypes from 'prop-types';
+import { useDebounce } from '../Helpers/useDebounce';
+import { Input } from 'semantic-ui-react';
 
 export const Search = props => {
 
-    const { updateBook, books, updateBooks, searchForBooks } = props;
+    const { updateBook, books, updateBooks, searchForBooks, searching } = props;
 
     // React Router's useHistory hook
     let history = useHistory();
@@ -21,19 +23,22 @@ export const Search = props => {
         useEffect will search for book on search state change
         so either when user searches for a book using input or 'query' is in url query string
     */
+
+    const debouncedSearch = useDebounce(search, 300);
+
     useEffect(() => {
         // don't bother making API call if there is no search term in state
-        if(!search) {
+        if(!debouncedSearch) {
             if(books.length >= 1) updateBooks([]);
             return;
         };
         // if a new input hasn't been entered or we are already searching don't make API call
         if(!newInput) return;
         setNewInput(false);
-        searchForBooks({search});
+        searchForBooks({search: debouncedSearch});
     }, [
         books.length,
-        search,
+        debouncedSearch,
         newInput,
         updateBooks,
         searchForBooks
@@ -72,11 +77,12 @@ export const Search = props => {
                 However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                 you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input
+                <Input
                     type="text"
                     placeholder="Search by title or author"
                     value={search}
                     onChange={handleChange}
+                    loading={searching}
                 />
 
             </div>
@@ -96,5 +102,6 @@ Search.propTypes = {
     updateBook: PropTypes.func.isRequired,
     books: PropTypes.array.isRequired,
     updateBooks: PropTypes.func.isRequired,
-    searchForBooks: PropTypes.func.isRequired
+    searchForBooks: PropTypes.func.isRequired,
+    searching: PropTypes.bool.isRequired
 };

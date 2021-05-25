@@ -174,6 +174,7 @@ function App() {
                   books={bookSearchResults}
                   updateBooks={updateBookSearchResults}
                   searchForBooks={searchForBooks}
+                  searching={searchingForBooks}
                 />
               </>
             )}
