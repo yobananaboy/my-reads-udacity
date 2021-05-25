@@ -3,10 +3,12 @@ import { useHistory, Link } from 'react-router-dom';
 import qs from 'qs';
 import { BooksGrid } from './BooksGrid';
 import PropTypes from 'prop-types';
+import { useDebounce } from '../Helpers/useDebounce';
+import { Input } from 'semantic-ui-react';
 
 export const Search = props => {
 
-    const { updateBook, books, updateBooks, searchForBooks } = props;
+    const { updateBook, books, updateBooks, searchForBooks, searching } = props;
 
     // React Router's useHistory hook
     let history = useHistory();
@@ -21,19 +23,22 @@ export const Search = props => {
         useEffect will search for book on search state change
         so either when user searches for a book using input or 'query' is in url query string
     */
+
+    const debouncedSearch = useDebounce(search, 300);
+
     useEffect(() => {
         // don't bother making API call if there is no search term in state
-        if(!search) {
+        if(!debouncedSearch) {
             if(books.length >= 1) updateBooks([]);
             return;
         };
         // if a new input hasn't been entered or we are already searching don't make API call
         if(!newInput) return;
         setNewInput(false);
-        searchForBooks({search});
+        searchForBooks({search: debouncedSearch});
     }, [
         books.length,
-        search,
+        debouncedSearch,
         newInput,
         updateBooks,
         searchForBooks
@@ -60,26 +65,27 @@ export const Search = props => {
     return(
         <div className="search-books">
             <div className="search-books-bar">
-            <Link to="/">
-                <button className="close-search">Close</button>
-            </Link>
-            <div className="search-books-input-wrapper">
-                {/*
-                NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                You can find these search terms here:
-                https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
+                <Link to="/">
+                    <button className="close-search">Close</button>
+                </Link>
+                <div className="search-books-input-wrapper">
+                    {/*
+                    NOTES: The search from BooksAPI is limited to a particular set of search terms.
+                    You can find these search terms here:
+                    https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
 
-                However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input
-                    type="text"
-                    placeholder="Search by title or author"
-                    value={search}
-                    onChange={handleChange}
-                />
+                    However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
+                    you don't find a specific author or title. Every search is limited by search terms.
+                    */}
+                    <Input
+                        type="text"
+                        placeholder="Search by title or author"
+                        value={search}
+                        onChange={handleChange}
+                        loading={searching}
+                    />
 
-            </div>
+                </div>
             </div>
             <div className="search-books-results">
                 {books.length >= 1 && <BooksGrid
@@ -96,5 +102,6 @@ Search.propTypes = {
     updateBook: PropTypes.func.isRequired,
     books: PropTypes.array.isRequired,
     updateBooks: PropTypes.func.isRequired,
-    searchForBooks: PropTypes.func.isRequired
+    searchForBooks: PropTypes.func.isRequired,
+    searching: PropTypes.bool.isRequired
 };
