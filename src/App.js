@@ -32,6 +32,10 @@ function App() {
   const [bookSearchResults, updateBookSearchResults] = useState([]);
   const [searchingForBooks, setSearchingForBooks] = useState(false); // this state lets us know to only search when we're not searching
 
+  /**
+  * @description Gets all books using BooksAPI and updates state
+  * @constructor
+  */
   const getAllBooks = () => {
     BooksAPI.getAll()
       .then(allBooks => {
@@ -39,20 +43,43 @@ function App() {
       });
   }
 
+  /**
+  * @description Gets an individual book using the BooksAPI
+  * @constructor
+  * @param {Object} book - represents a book
+  */
   const getBook = ({book}) => {
     return BooksAPI.get(book.id)
   }
 
+  /**
+  * @description Updates a book with details of updated shelf
+  * @constructor
+  * @param {Object} book - represents a book
+  * @param {string} shelf - the book's updated shelf
+  * @returns {Promise} Promise object represents the response from calling BooksAPI.update()
+  */
   const updateBook = async({book, shelf}) => {
     let response = await BooksAPI.update(book, shelf);
     return response;
   }
 
+  /**
+  * @description Uses the BooksAPI to get data on each book in an array of books
+  * @constructor
+  * @param {Array} booksArray - an array of books
+  */
   const getBookShelfFromBooksArray = async({booksArray}) => {
+    // if no array then bookSearchResults should be an empty array
     if(!booksArray) {
       updateBookSearchResults([]);
       return;
     }
+    /*
+      otherwise we try and get details for each book in the array
+      we do this by mapping over our books array and calling getBook for each book
+      we use Promise.all() so that updatedArr resolves to an array of the results of the input promises
+    */
     const updatedArr = await Promise.all(booksArray.map(async(book) => {
       try {
         return await getBook({book})
@@ -63,6 +90,11 @@ function App() {
     updateBookSearchResults(updatedArr);
   }
 
+  /**
+  * @description Uses the BooksAPI to get search for book based on query
+  * @constructor
+  * @param {string} search - search term used to find books
+  */
   const searchForBooks = ({search}) => {
     if(searchingForBooks) return;
     setSearchingForBooks(true);
@@ -78,18 +110,27 @@ function App() {
       })
       .catch(err => {
           console.log(err);
-          updateBooks([]); // no results on error searching
+          updateBooks([]); // there could be no results from the API on error searching so updateBooks with empty array
           setSearchingForBooks(false);
       });
   }
 
-  /*
-    if we have selected a book we want to update the book's shelf
+  /**
+  * @description Updates a book's shelf
+  * @constructor
+  * @param {Object} book - represents a book
+  * @param {string} shelf - the book's updated shelf
+  * @param {boolean} search - true if we are updating a book in search results
   */
   const updateBookWithShelf = ({book, shelf, search = false}) => {
     updateBook({book, shelf})
       .then(response => {
         if(response.error) return;
+        /*
+          if it's a book we have searched for we need to get book shelf from array of search results
+          this is so we can get each book's shelf using the API.
+          Otherwise we call getAllBooks() because this will include the updated book's shelf
+        */
         search ? getBookShelfFromBooksArray({booksArray: bookSearchResults}) : getAllBooks();
       })
       .catch(err => console.log(err));

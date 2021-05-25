@@ -28,6 +28,12 @@ const shelfOptions = [
 export const BookSelect = props => {
     const { book, updateBook, search } = props;
 
+    /**
+    * @description Handles change in book shelf selection - calls updateBook() prop
+    * @constructor
+    * @param {Object} e - the native event
+    * @param {Object} data - the object of the option selected
+    */
     const handleChange = (e, data) => {
         const { value } = data;
         updateBook({

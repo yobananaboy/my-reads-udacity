@@ -39,6 +39,11 @@ export const Search = props => {
         searchForBooks
     ]);
 
+    /**
+    * @description Handles change in search text input and updates search state with new value and 'query' in history
+    * @constructor
+    * @param {Object} e - the native event
+    */
     const handleChange = (e) => {
         // on search input change get value
         const { value } = e.target;
