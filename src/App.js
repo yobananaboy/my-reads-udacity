@@ -8,13 +8,13 @@ import { OpenSearch } from './Components/OpenSearch';
 import { Search } from './Components/Search';
 import { MetaData } from './Components/MetaData';
 
-const bookShelves = {
+const BOOK_SHELVES = {
   currentlyReading: 'Currently reading',
   wantToRead: 'Wants to read',
   read: 'Read'
 };
 
-const metaData = {
+const META_DATA = {
   homepage: {
     title: 'MyReads | Home',
     description: 'MyReads app created for the Udacity React nanodegree'
@@ -150,12 +150,12 @@ function App() {
             path='/'
             render={() => (
               <>
-                <MetaData metaData={metaData.homepage} />
+                <MetaData metaData={META_DATA.homepage} />
                 <PageHeader />
-                {Object.keys(bookShelves).map((key) => (
+                {Object.keys(BOOK_SHELVES).map((key) => (
                   books && <BookShelf
-                    key={bookShelves[key]}
-                    title={bookShelves[key]} // title is 'Currently reading' etc.
+                    key={BOOK_SHELVES[key]}
+                    title={BOOK_SHELVES[key]} // title is 'Currently reading' etc.
                     books={books.filter(book => book.shelf === key)} // filter books so that only books with a status that matches the current shelf are added
                     updateBook={updateBookWithShelf}
                   />
@@ -168,7 +168,7 @@ function App() {
             path='/search'
             render={() => (
               <>
-                <MetaData metaData={metaData.search} />
+                <MetaData metaData={META_DATA.search} />
                 <Search
                   updateBook={updateBookWithShelf}
                   books={bookSearchResults}
