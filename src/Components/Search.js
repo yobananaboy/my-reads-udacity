@@ -78,13 +78,14 @@ export const Search = props => {
                     if there are books in the array then display these,
                     otherwise if books is an empty array show no books found message
                 */}
-                {books.length >= 1 ?
+                {books.length >= 1 &&
                     <BooksGrid
                         books={books}
                         updateBook={updateBook}
                         search={true}
                     />
-                    :
+                }
+                {books.length === 0 && search &&
                     <p>No results found. Please try a different search term!</p>
                 }
             </div>
