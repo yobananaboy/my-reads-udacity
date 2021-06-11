@@ -98,7 +98,7 @@ function App() {
   const searchForBooks = useCallback(search => {
     setSearchingForBooks(true);
     if(!search) {
-      updateBooks([]);
+      updateBookSearchResults([]);
       return;
     }
     BooksAPI.search(search)
