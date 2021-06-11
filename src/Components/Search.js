@@ -8,7 +8,7 @@ import { Input } from 'semantic-ui-react';
 
 export const Search = props => {
 
-    const { updateBook, books, updateBooks, searchForBooks, searching } = props;
+    const { updateBook, books, searchForBooks, searching } = props;
 
     // React Router's useHistory hook
     let history = useHistory();
@@ -18,29 +18,16 @@ export const Search = props => {
 
     // if 'query' in query string then set this as the search state, otherwise leave blank
     const [search, setSearch] = useState('query' in parsedSearch ? parsedSearch.query : "");
-    const [newInput, setNewInput] = useState(true); // this state lets us know when there has been a new input (so we need to search)
     /*
         useEffect will search for book on search state change
         so either when user searches for a book using input or 'query' is in url query string
     */
-
     const debouncedSearch = useDebounce(search, 300);
 
     useEffect(() => {
-        // don't bother making API call if there is no search term in state
-        if(!debouncedSearch) {
-            if(books.length >= 1) updateBooks([]);
-            return;
-        };
-        // if a new input hasn't been entered or we are already searching don't make API call
-        if(!newInput) return;
-        setNewInput(false);
-        searchForBooks({search: debouncedSearch});
+        searchForBooks(debouncedSearch);
     }, [
-        books.length,
         debouncedSearch,
-        newInput,
-        updateBooks,
         searchForBooks
     ]);
 
@@ -52,7 +39,6 @@ export const Search = props => {
     const handleChange = (e) => {
         // on search input change get value
         const { value } = e.target;
-        setNewInput(true);
         // update search state
         setSearch(value);
         // add/update 'query' in history
@@ -88,11 +74,19 @@ export const Search = props => {
                 </div>
             </div>
             <div className="search-books-results">
-                {books.length >= 1 && <BooksGrid
-                    books={books}
-                    updateBook={updateBook}
-                    search={true}
-                />}
+                {/*
+                    if there are books in the array then display these,
+                    otherwise if books is an empty array show no books found message
+                */}
+                {books.length >= 1 ?
+                    <BooksGrid
+                        books={books}
+                        updateBook={updateBook}
+                        search={true}
+                    />
+                    :
+                    <p>No results found. Please try a different search term!</p>
+                }
             </div>
         </div>
     )

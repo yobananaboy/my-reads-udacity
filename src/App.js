@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -48,9 +48,9 @@ function App() {
   * @constructor
   * @param {Object} book - represents a book
   */
-  const getBook = ({book}) => {
+  const getBook = useCallback(book => {
     return BooksAPI.get(book.id)
-  }
+  }, []);
 
   /**
   * @description Updates a book with details of updated shelf
@@ -69,7 +69,7 @@ function App() {
   * @constructor
   * @param {Array} booksArray - an array of books
   */
-  const getBookShelfFromBooksArray = async({booksArray}) => {
+  const getBookShelfFromBooksArray = useCallback(async({booksArray}) => {
     // if no array then bookSearchResults should be an empty array
     if(!booksArray) {
       updateBookSearchResults([]);
@@ -82,22 +82,25 @@ function App() {
     */
     const updatedArr = await Promise.all(booksArray.map(async(book) => {
       try {
-        return await getBook({book})
+        return await getBook(book)
       } catch(err) {
         return book
       }
     }));
     updateBookSearchResults(updatedArr);
-  }
+  }, [getBook]);
 
   /**
   * @description Uses the BooksAPI to get search for book based on query
   * @constructor
   * @param {string} search - search term used to find books
   */
-  const searchForBooks = ({search}) => {
-    if(searchingForBooks) return;
+  const searchForBooks = useCallback(search => {
     setSearchingForBooks(true);
+    if(!search) {
+      updateBooks([]);
+      return;
+    }
     BooksAPI.search(search)
       .then(result => {
           /*
@@ -105,15 +108,16 @@ function App() {
               If errored - update book results to empty err
               Otherwise update with books received from API
           */
-          !result || 'error' in result ? updateBooks([]) : getBookShelfFromBooksArray({booksArray: result});
+          console.log(result);
+          !result || 'error' in result ? updateBookSearchResults([]) : getBookShelfFromBooksArray({booksArray: result});
           setSearchingForBooks(false);
       })
       .catch(err => {
           console.log(err);
-          updateBooks([]); // there could be no results from the API on error searching so updateBooks with empty array
+          updateBookSearchResults([]); // there could be no results from the API on error searching so updateBooks with empty array
           setSearchingForBooks(false);
       });
-  }
+  }, [getBookShelfFromBooksArray]);
 
   /**
   * @description Updates a book's shelf
