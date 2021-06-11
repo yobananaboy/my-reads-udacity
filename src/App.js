@@ -142,7 +142,10 @@ function App() {
   // get all books on mount
   useEffect(() => {
     getAllBooks()
-  }, [books])
+    return () => {
+      updateBooks([]);
+    };
+  }, [])
 
   return(
     <BrowserRouter>
