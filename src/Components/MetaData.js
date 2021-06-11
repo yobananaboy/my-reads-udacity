@@ -7,8 +7,6 @@ export const MetaData = props => {
 
     return(
         <Helmet>
-            {console.log("title", title)}
-            {console.log("description", description)}
             <title>{title}</title>
             <meta name="description" content={description} />
         </Helmet>
