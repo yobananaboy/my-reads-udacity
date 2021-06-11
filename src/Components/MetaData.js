@@ -7,6 +7,8 @@ export const MetaData = props => {
 
     return(
         <Helmet>
+            {console.log("title", title)}
+            {console.log("description", description)}
             <title>{title}</title>
             <meta name="description" content={description} />
         </Helmet>
@@ -14,6 +16,5 @@ export const MetaData = props => {
 }
 
 MetaData.propTypes = {
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
+    metaData: PropTypes.object.isRequired,
 }
