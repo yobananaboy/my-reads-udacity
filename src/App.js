@@ -108,7 +108,6 @@ function App() {
               If errored - update book results to empty err
               Otherwise update with books received from API
           */
-          console.log(result);
           !result || 'error' in result ? updateBookSearchResults([]) : getBookShelfFromBooksArray({booksArray: result});
           setSearchingForBooks(false);
       })
