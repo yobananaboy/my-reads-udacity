@@ -69,6 +69,8 @@ export const Search = props => {
                         value={search}
                         onChange={handleChange}
                         loading={searching}
+                        name="search"
+                        aria-label="search"
                     />
 
                 </div>
